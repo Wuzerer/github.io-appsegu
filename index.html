@@ -2,17 +2,67 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#1e293b" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="mobile-web-app-capable" content="yes" />
     <title>Control de Vigilancia</title>
-    <script type="module" crossorigin src="./assets/index-BQwp664n.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CbkJl5zv.css">
-  <link rel="manifest" href="./manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="./registerSW.js"></script></head>
+    <script type="module" crossorigin src="/assets/index-CXCUzqsj.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CyA0VBqZ.css">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
   <body>
     <div id="root"></div>
+    <script>
+      // Script para ocultar la barra de navegación del navegador en móviles
+      (function() {
+        // Solo ejecutar en dispositivos móviles
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+          return;
+        }
+
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function updateScroll() {
+          const scrollY = window.scrollY;
+
+          // Si el usuario hace scroll hacia abajo, intentar ocultar la barra
+          if (scrollY > lastScrollY && scrollY > 10) {
+            // En móviles modernos, el scroll hacia abajo oculta la barra
+            if ('visualViewport' in window) {
+              // Usar la API de visual viewport si está disponible
+              const viewport = window.visualViewport;
+              if (viewport) {
+                // Forzar un pequeño scroll para activar el ocultamiento de la barra
+                window.scrollTo(0, scrollY + 1);
+                setTimeout(() => window.scrollTo(0, scrollY), 10);
+              }
+            }
+          }
+
+          lastScrollY = scrollY;
+          ticking = false;
+        }
+
+        // Escuchar eventos de scroll
+        window.addEventListener('scroll', function() {
+          if (!ticking) {
+            requestAnimationFrame(updateScroll);
+            ticking = true;
+          }
+        }, { passive: true });
+
+        // Intentar ocultar la barra inicialmente
+        setTimeout(() => {
+          if (window.scrollY === 0) {
+            // Pequeño scroll inicial para activar el modo fullscreen
+            window.scrollTo(0, 1);
+            setTimeout(() => window.scrollTo(0, 0), 10);
+          }
+        }, 100);
+      })();
+    </script>
   </body>
 </html>
